@@ -1,0 +1,56 @@
+#!/bin/bash
+opcion="-1"
+
+until [ $opcion -eq 0 ]
+do
+  echo "============================="
+  echo " Gestion de usuarios - Menu"
+  echo "============================="
+  echo "1 - Crear usuario"
+  echo "2 - Eliminar usuario"
+  echo "3 - Bloquear usuario"
+  echo "4 - Desbloquear usuario"
+  echo "5 - Listar usuarios"
+  echo "0 - Salir"
+  echo "============================="
+
+  read -p "Inserte una opcion caballero" opcion
+
+  case $opcion in
+    1) 
+      read -p "Ingrese un nombre de usuario: " usuario
+      sudo useradd "$usuario" 
+      echo "Usuario creado"
+      ;;
+    2) 
+      read -p "Ingrese el nombre del usuario a eliminar: " usuario
+      sudo userdel "$usuario"
+      echo "Usuario eliminado"
+      ;;
+    3) 
+      read -p "Bloquear a qué usuario: " usuario
+      sudo usermod -L "$usuario"
+      echo "Bloqueando el usuario: $usuario"
+      ;;
+    4) 
+      read -p "A qué usuario desbloqueo: " usuario
+      	sudo usermod -U "$usuario"  # Desbloquear la cuenta
+	read -sp "Ingrese la nueva contraseña para el usuario $usuario: " password
+	echo "$usuario:$password" | sudo chpasswd  # Establecer una nueva contraseña
+	echo "Usuario desbloqueado y contraseña establecida"
+      ;;
+    5) 
+      echo "Lista de usuarios:"
+      cut -d: -f1 /etc/passwd
+      ;;
+    0) 
+      echo "Saliendo del programa"
+      exit 0
+      ;;
+    *) 
+      echo "Tiene que ser un valor entre 0 y 5"
+      ;;
+  esac
+
+done
+

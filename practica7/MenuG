@@ -1,0 +1,50 @@
+#!/bin/bash
+opcion="-1"
+
+until [ $opcion -eq 0 ]
+do
+
+echo "============================="
+echo " Gestion de grupos - Menu"
+echo "============================="
+echo "1 - Crear grupo"
+echo "2 - Eliminar grupo"
+echo "3 - Modificar nombre del grupo"
+echo "4 - Listar grupos"
+echo "0 - Salir"
+echo "============================="
+
+read -p "Inserte una opcion caballero: " opcion
+
+case $opcion in
+1) 
+   read -p "Ingrese el nombre del grupo a crear: " grupo
+   sudo groupadd "$grupo"
+   echo "Grupo '$grupo' creado"
+   ;;
+2) 
+   read -p "Ingrese el nombre del grupo a eliminar: " grupo
+   sudo groupdel "$grupo"
+   echo "Grupo '$grupo' eliminado"
+   ;;
+3) 
+   read -p "Ingrese el nombre del grupo a modificar: " grupo_antiguo
+   read -p "Ingrese el nuevo nombre del grupo: " grupo_nuevo
+   sudo groupmod -n "$grupo_nuevo" "$grupo_antiguo"
+   echo "Nombre del grupo cambiado de '$grupo_antiguo' a '$grupo_nuevo'"
+   ;;
+4) 
+   echo "Listado de grupos:"
+   sudo getent group
+   ;;
+0) 
+   echo "Saliendo del programa"
+   exit 0
+   ;;
+*) 
+   echo "Debe insertar un valor entre 0 y 4"
+   ;;
+esac
+
+done
+
